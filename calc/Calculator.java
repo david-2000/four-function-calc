@@ -6,28 +6,26 @@ package calc;
 
 import ui.CalcUI;
 
-public class Calculator
+public abstract class Calculator
 {
-	private CalcUI ui;
-	private double num;
-	private double mem;
+	protected CalcUI ui;
 
-	public Calculator(CalcUI ui)
-	{
-		this.ui = ui;
-		num = mem = 0.0;
-	}
+	public abstract void addDigit(double d);
 
-	public void addDigit(int d)
-	{
-		num *= 10;
-		num += d;
-		ui.SetNumber(num+"");
-	}
+	public abstract void clear();
 
-	public void clear()
-	{
-		num = 0;
-		ui.SetNumber(num+"");
-	}
+	public abstract void add();
+
+	public abstract void sub();
+
+	public abstract void mult();
+
+	public abstract void div();
+
+	public abstract void equals();
+
+	public abstract void decimal();
+
+	public abstract void plusMinus();
+	
 }
