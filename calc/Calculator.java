@@ -8,7 +8,7 @@ import ui.CalcUI;
 
 public abstract class Calculator
 {
-	protected CalcUI ui;
+	public CalcUI ui;
 
 	public abstract void addDigit(double d);
 

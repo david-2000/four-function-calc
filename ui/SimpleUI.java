@@ -6,18 +6,26 @@ package ui;
 
 // Imports
 import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.awt.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.util.HashMap;
+import java.text.DecimalFormat;
 
 //Temp
 import javax.swing.BorderFactory;
+import java.math.BigDecimal;
 
-public class SimpleUI implements CalcUI
+public class SimpleUI extends CalcUI
 {
+	/**
+	 * ID variable for manual ActionPerformed calls.
+	 */
+	private int idGen;
+
 	/**
 	 * The entire Calculator App window.
 	 */
@@ -35,6 +43,8 @@ public class SimpleUI implements CalcUI
 	 */
 	private JPanel display_panel;
 	private JLabel[] display_field;
+	private BigDecimal number = new BigDecimal(0);
+	private DecimalFormat format;
 
 	/**
 	 * Panels that hold pressable number buttons as well as the decimal operator
@@ -57,6 +67,11 @@ public class SimpleUI implements CalcUI
 
 	public SimpleUI()
 	{
+		String f = "0.";
+		for (int i = 0 ; i < n-2 ; i++)
+			f += "#";
+		format = new DecimalFormat(f);
+
 		window = new JFrame();
 		window.setSize(500,500);
 		window_layout = new GridBagLayout();
@@ -70,6 +85,7 @@ public class SimpleUI implements CalcUI
 
 		window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		window.setVisible(true);
+		idGen = ActionEvent.ACTION_FIRST;
 	}
 
 
@@ -116,20 +132,19 @@ public class SimpleUI implements CalcUI
 	 */
 	private void SetUpDisplay()
 	{
-		display_field = new JLabel[20];
+		display_field = new JLabel[n];
 		GridBagConstraints c = new GridBagConstraints();
 		GridBagLayout g = new GridBagLayout();
 		display_panel.setLayout(g);
 		int font_size = 24;
 
-		for ( int i = 0 ; i < display_field.length ; i++)
+		for ( int i = 0 ; i < n ; i++)
 		{
 			c.weighty = 1;
 			c.weightx = 100.0/display_field.length;
 			display_field[i] = new JLabel();
 			display_field[i].setFont(new Font("Jersey M54", Font.PLAIN, font_size));
 			display_field[i].setText("");
-			//display_field[i].setBorder(BorderFactory.createLineBorder(Color.black));
 			display_panel.add(display_field[i], c);
 		}
 	}
@@ -256,20 +271,17 @@ public class SimpleUI implements CalcUI
 	 */
 	public String GetNumber()
 	{
-		String ret = "";
-		for (int i = 0; i < display_field.length ; i++)
-			ret += display_field[i].getText();
-		return ret;
+		return format.format(number);
 	}
 
 
 	/**
 	 * {@inheritdoc}
 	 */
-	public void SetNumber(String num){
-		if(num.length() > 20)
-			num = num.substring(0,20);
-		int n = display_field.length;
+	public void SetNumber(BigDecimal new_num){
+		number = new_num.add(new BigDecimal(0.0));
+		String num = format.format(number);
+		System.out.println("NUMBER: "+ num);
 		int m = num.length();
 
 		int i =0;
@@ -280,6 +292,19 @@ public class SimpleUI implements CalcUI
 		for (; i < n ; i++)
 			display_field[i].setText(num.charAt(j++)+"");
 	
+	}
+
+	/**
+	 * {@inheritdoc}
+	 */
+	public void PressKey(char key)
+	{
+		ActionListener act = buttons.get(key).getActionListeners()[0];
+		if (act == null)
+			return;
+
+		act.actionPerformed(new ActionEvent(this, idGen, ""+key, System.currentTimeMillis(), 0));
+		idGen++;
 	}
 
 }

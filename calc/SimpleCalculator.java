@@ -5,24 +5,27 @@
 package calc;
 
 import ui.CalcUI;
+import java.math.BigDecimal;
 
 public class SimpleCalculator extends Calculator
 {
-	private double num;
-	private double mem;
-	private char nextOp = 'e';
-	private int neg = 1;
-	private int dec = 1;
-	private int ten = 10;
+	private BigDecimal num;
+	private BigDecimal mem;
+	private char nextOp;
+	private BigDecimal neg;
+	private BigDecimal dec;
+	private BigDecimal ten;
 	private boolean restart;
+
+	private BigDecimal bd(double num){ return new BigDecimal(num); }
 
 
 	public SimpleCalculator(CalcUI ui)
 	{
 		this.ui = ui;
-		num = mem = 0.0;
-		neg = dec = 1;
-		ten = 10;
+		num = mem = bd(0.0);
+		neg = dec = bd(1.0);
+		ten = bd(10.0);
 		nextOp = 'e';
 	}
 
@@ -30,23 +33,23 @@ public class SimpleCalculator extends Calculator
 	public void addDigit(double d)
 	{
 		if ( restart )
-			num = 0;
+			num = bd(0.0);
 		restart = false;
-		num *= ten;
-		d /= dec;
-		d *= neg;
-		num += d;
-		dec *= (10/ten);
+		num = num.multiply(ten);
+		BigDecimal digit = bd(d).divide(dec);
+		digit = digit.multiply(neg);
+		num = num.add(digit);
+		dec = dec.multiply(bd(10.0).divide(ten));
+
 		updateUI();
-		System.out.printf("dc: op:%c\tnum:%f\tmem:%f\n", nextOp, num, mem);
 	}
 
 
 	public void clear()
 	{
-		num = mem = 0.0;
-		neg = dec = 1;
-		ten = 10;
+		num = mem = bd(0.0);
+		neg = dec = bd(1.0);
+		ten = bd(10.0);
 		nextOp = 'e';
 		updateUI();
 	}
@@ -54,7 +57,7 @@ public class SimpleCalculator extends Calculator
 
 	private void updateUI()
 	{
-		ui.SetNumber(num+"");
+		ui.SetNumber(num);
 	}
 
 
@@ -67,7 +70,6 @@ public class SimpleCalculator extends Calculator
 
 	public void add()
 	{
-		System.out.printf("[+]\n");
 		evaluate();
 		this.setOp('+');
 	}
@@ -75,7 +77,6 @@ public class SimpleCalculator extends Calculator
 
 	public void sub()
 	{
-		System.out.printf("[-]\n");
 		evaluate();
 		this.setOp('-');
 	}
@@ -83,7 +84,6 @@ public class SimpleCalculator extends Calculator
 
 	public void mult()
 	{
-		System.out.printf("[*]\n");
 		evaluate();
 		this.setOp('*');
 	}
@@ -91,7 +91,6 @@ public class SimpleCalculator extends Calculator
 
 	public void div()
 	{
-		System.out.printf("[/]\n");
 		evaluate();
 		this.setOp('/');
 	}
@@ -99,60 +98,56 @@ public class SimpleCalculator extends Calculator
 
 	public void decimal()
 	{
-		dec *= 10;
-		ten = 1;
+		if ( ten.compareTo(bd(1.0)) == 0 )
+			return;
+		dec = dec.multiply(bd(10.0));
+		ten = bd(1.0);
 		updateUI();
 	}
 
 
 	public void plusMinus()
 	{
-		num *= -1;
-		neg *= -1;
+		num = num.multiply(bd(-1.0));
+		neg = neg.multiply(bd(-1.0));
 		updateUI();
 	}
 
 
 	public void equals()
 	{
-		System.out.printf("[=]\n");
 		evaluate();
-		num = mem;
-		mem = 0;
+		num = mem.add(bd(0.0));
+		mem = bd(0.0);
 		updateUI();
 		this.setOp('e');
 		restart = true;
-		System.out.printf("=: op:%s\tnum:%f\tmem:%f\n", nextOp, num, mem);
 	}
 
 
 	public void evaluate()
 	{
-		System.out.printf("1: op:%s\tnum:%f\tmem:%f\n", nextOp, num, mem);
 		switch(nextOp){
 			case '+':
-				mem += num;
-				num = 0;
+				mem = mem.add(num);
 				break;
 			case '-':
-				mem -= num;
-				num = 0;
+				mem = mem.subtract(num);
 				break;
 			case '*':
-				mem *= num;
-				num = 0;
+				mem = mem.multiply(num);
 				break;
 			case '/':
-				mem /= num;
-				num = 0;
+				mem = mem.divide(num);
 				break;
 			case 'e':
-				mem = num;
-				num = 0;
+				mem = num.add(bd(0.0));
 				break;
 			default:
 				break;
 		}
-		System.out.printf("2: op:%s\tnum:%f\tmem:%f\n\n", nextOp, num, mem);
+		num = bd(0.0);
+		neg = dec = bd(1.0);
+		ten = bd(10.0);
 	}
 }

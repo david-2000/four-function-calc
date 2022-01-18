@@ -12,6 +12,7 @@
 
 # Package Files #
 *.jar
+!junit-4.10.jar
 *.war
 *.nar
 *.ear

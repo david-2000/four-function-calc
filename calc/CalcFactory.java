@@ -9,14 +9,46 @@ import java.awt.event.*;
 
 public class CalcFactory
 {
+
 	public static void main(String[] args){
-		setUpCalc("Simple", "Simple");
+		char choice = '1';
+
+		if( args.length > 0)
+			choice = args[0].charAt(0);
+
+		switch(choice)
+		{
+			case '1':
+				setUpCalc("SimpleUI", "SimpleCalc");
+				break;
+			case '2':
+				setUpCalc("TestUI", "SimpleCalc");
+				break;
+			default:
+				break;
+		}
+
 	}
 
 
 	public static Calculator setUpCalc(String uiType, String calcType){
-		CalcUI ui = new SimpleUI();
-		Calculator calc = new SimpleCalculator(ui);
+		CalcUI ui;
+		Calculator calc; 
+
+		if (uiType.equals("SimpleUI"))
+			ui = new SimpleUI();
+		else if ( uiType.equals("TestUI"))
+			ui = new TestUI();
+		else
+			ui = new TestUI();
+
+		if (calcType.equals("SimpleCalc"))
+			calc = new SimpleCalculator(ui);
+		else if ( calcType.equals("NoIfs"))
+			calc = new SimpleCalculator(ui);
+		else
+			calc = new SimpleCalculator(ui);
+		
 
 		for (int i = 0; i < 10; i++){
 			double j = i;
