@@ -23,13 +23,15 @@ public class SimpleCalculator extends Calculator
 	public SimpleCalculator(CalcUI ui)
 	{
 		this.ui = ui;
-		num = mem = bd(0.0);
-		neg = dec = bd(1.0);
+		num =  bd(0.0);
+		mem = bd(0.0);
+		neg = bd(1.0);
+		dec = bd(1.0);
 		ten = bd(10.0);
 		nextOp = 'e';
 	}
 
-	
+
 	public void addDigit(double d)
 	{
 		if ( restart )
@@ -129,7 +131,7 @@ public class SimpleCalculator extends Calculator
 	{
 		switch(nextOp){
 			case '+':
-				mem = mem.add(num);
+				num = mem.add(num);
 				break;
 			case '-':
 				mem = mem.subtract(num);

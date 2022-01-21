@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import java.util.HashMap;
 import java.text.DecimalFormat;
 import java.math.BigDecimal;
+import java.util.Iterator;
 
 
 public class TestUI extends CalcUI
@@ -68,7 +69,7 @@ public class TestUI extends CalcUI
 	 */
 	private void SetUpButtons()
 	{
-		String bts ="0123456789+-*/C."+CalcUI.PLUS_MINUS;
+		String bts ="0123456789+-*/C.="+CalcUI.PLUS_MINUS;
 		for (int i = 0 ; i < bts.length() ; i++)
 			buttons.put(bts.charAt(i), new JButton());
 	}
@@ -123,6 +124,8 @@ public class TestUI extends CalcUI
 	 */
 	public void PressKey(char key)
 	{
+		if ( buttons.get(key) == null)
+			return;
 		ActionListener act = buttons.get(key).getActionListeners()[0];
 		if (act == null)
 			return;

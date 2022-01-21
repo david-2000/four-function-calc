@@ -2,9 +2,7 @@
 
 function compile
 {
-	javac calc/*.java
-	javac ui/*.java
-	javac -cp .:junit-4.10.jar test/*.java
+	javac calc/*.java && javac ui/*.java &&  javac -cp .:junit-4.10.jar test/*.java
 }
 
 function run
@@ -14,8 +12,7 @@ function run
 
 function main
 {
-	compile
-	run
+	compile && run
 }
 
 main $@
