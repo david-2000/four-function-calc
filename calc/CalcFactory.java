@@ -6,6 +6,7 @@ package calc;
 
 import ui.*;
 import java.awt.event.*;
+import java.util.Scanner;
 
 public class CalcFactory
 {
@@ -22,7 +23,8 @@ public class CalcFactory
 				setUpCalc("SimpleUI", "SimpleCalc");
 				break;
 			case '2':
-				setUpCalc("TestUI", "SimpleCalc");
+				Calculator calc =setUpCalc("TestUI", "SimpleCalc");
+				input(calc);
 				break;
 			default:
 				break;
@@ -48,7 +50,7 @@ public class CalcFactory
 			calc = new SimpleCalculator(ui);
 		else
 			calc = new SimpleCalculator(ui);
-		
+
 
 		for (int i = 0; i < 10; i++){
 			double j = i;
@@ -65,4 +67,36 @@ public class CalcFactory
 		ui.SetButtonAction(CalcUI.PLUS_MINUS, e -> { calc.plusMinus(); });
 		return calc;
 	}
+
+
+	/**
+	 * Lets you input strings to test with TESTUI interface
+	 */
+	public static void input(Calculator calc)
+	{
+		Scanner k = new Scanner(System.in);
+		String opts = "0123456789-+/*.C="+CalcUI.PLUS_MINUS;
+		boolean condition = true;
+		while(condition)
+		{
+			String in = k.nextLine();
+
+			for(int i =0; i < in.length(); i++){
+				char c = in.charAt(i);
+				if ( opts.indexOf(c) < 0){
+					condition = false;
+					break;
+				}
+				calc.ui.PressKey(c);
+
+
+			}
+
+
+		}
+		System.out.println("Input is invalid. Quitting");
+
+
+	}
+
 }

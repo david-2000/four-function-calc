@@ -12,7 +12,12 @@ function run
 
 function main
 {
+	if [ "$1" == "compile" ] ; then
+		compile
+		exit 0
+	fi
 	compile && run
 }
+
 
 main $@

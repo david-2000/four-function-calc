@@ -6,9 +6,12 @@ package calc;
 
 import ui.CalcUI;
 import java.math.BigDecimal;
+import java.math.MathContext;
 
 public class SimpleCalculator extends Calculator
 {
+	private boolean DEBUG = false;
+
 	private BigDecimal num;
 	private BigDecimal mem;
 	private char nextOp;
@@ -31,17 +34,35 @@ public class SimpleCalculator extends Calculator
 		nextOp = 'e';
 	}
 
+	private void DEBUG(String message)
+	{
+		if (DEBUG)
+			System.err.println(message);
+	}
+
+	private void restart_num()
+	{
+		if ( restart )
+		{
+			ten = bd(10.0);
+			neg = dec = bd(1.0);
+			mem = num;
+			num = bd(0.0);
+		}
+		restart = false;
+	}
 
 	public void addDigit(double d)
 	{
-		if ( restart )
-			num = bd(0.0);
-		restart = false;
-		num = num.multiply(ten);
-		BigDecimal digit = bd(d).divide(dec);
-		digit = digit.multiply(neg);
+		restart_num();
+
+		num = num.multiply(ten, MathContext.DECIMAL64);
+		BigDecimal digit = bd(d).divide(dec, MathContext.DECIMAL64);
+		digit = digit.multiply(neg, MathContext.DECIMAL64);
 		num = num.add(digit);
-		dec = dec.multiply(bd(10.0).divide(ten));
+		dec = dec.multiply(bd(10.0).divide(ten, MathContext.DECIMAL64), MathContext.DECIMAL64);
+
+		DEBUG(String.format("<%d> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]", (int)d,ten, dec,neg,mem,num,nextOp,restart));
 
 		updateUI();
 	}
@@ -54,6 +75,7 @@ public class SimpleCalculator extends Calculator
 		ten = bd(10.0);
 		nextOp = 'e';
 		updateUI();
+		DEBUG(String.format("<C> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]",ten, dec,neg,mem,num,nextOp,restart));
 	}
 
 
@@ -74,6 +96,7 @@ public class SimpleCalculator extends Calculator
 	{
 		evaluate();
 		this.setOp('+');
+		DEBUG(String.format("<+> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]",ten, dec,neg,mem,num,nextOp,restart));
 	}
 
 
@@ -81,6 +104,7 @@ public class SimpleCalculator extends Calculator
 	{
 		evaluate();
 		this.setOp('-');
+		DEBUG(String.format("<-> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]",ten, dec,neg,mem,num,nextOp,restart));
 	}
 
 
@@ -88,6 +112,7 @@ public class SimpleCalculator extends Calculator
 	{
 		evaluate();
 		this.setOp('*');
+		DEBUG(String.format("<*> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]",ten, dec,neg,mem,num,nextOp,restart));
 	}
 
 
@@ -95,35 +120,41 @@ public class SimpleCalculator extends Calculator
 	{
 		evaluate();
 		this.setOp('/');
+		DEBUG(String.format("</> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]",ten, dec,neg,mem,num,nextOp,restart));
 	}
 
 
 	public void decimal()
 	{
+		restart_num();
 		if ( ten.compareTo(bd(1.0)) == 0 )
 			return;
 		dec = dec.multiply(bd(10.0));
 		ten = bd(1.0);
 		updateUI();
+		DEBUG(String.format("<.> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]",ten, dec,neg,mem,num,nextOp,restart));
 	}
 
 
 	public void plusMinus()
 	{
+		restart_num();
 		num = num.multiply(bd(-1.0));
 		neg = neg.multiply(bd(-1.0));
 		updateUI();
+		DEBUG(String.format("<%s> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]",CalcUI.PLUS_MINUS, ten, dec,neg,mem,num,nextOp,restart));
 	}
 
 
 	public void equals()
 	{
 		evaluate();
-		num = mem.add(bd(0.0));
+		//num = mem.add(bd(0.0));
 		mem = bd(0.0);
 		updateUI();
 		this.setOp('e');
 		restart = true;
+		DEBUG(String.format("<=> -- ten[%s]\tdec[%s]\tneg[%s]\tmen[%s]\tnum[%s]\top[%c]\trestart[%b]",ten, dec,neg,mem,num,nextOp,restart));
 	}
 
 
@@ -134,22 +165,21 @@ public class SimpleCalculator extends Calculator
 				num = mem.add(num);
 				break;
 			case '-':
-				mem = mem.subtract(num);
+				num = mem.subtract(num);
 				break;
 			case '*':
-				mem = mem.multiply(num);
+				num = mem.multiply(num, MathContext.DECIMAL64);
 				break;
 			case '/':
-				mem = mem.divide(num);
+				num = mem.divide(num, MathContext.DECIMAL64);
 				break;
 			case 'e':
-				mem = num.add(bd(0.0));
+				num = num;
 				break;
 			default:
 				break;
 		}
-		num = bd(0.0);
-		neg = dec = bd(1.0);
-		ten = bd(10.0);
+		restart = true;
+		updateUI();
 	}
 }

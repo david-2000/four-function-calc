@@ -281,7 +281,6 @@ public class SimpleUI extends CalcUI
 	public void SetNumber(BigDecimal new_num){
 		number = new_num.add(new BigDecimal(0.0));
 		String num = format.format(number);
-		System.out.println("NUMBER: "+ num);
 		int m = num.length();
 
 		int i =0;
@@ -299,6 +298,8 @@ public class SimpleUI extends CalcUI
 	 */
 	public void PressKey(char key)
 	{
+		if (buttons.get(key) == null)
+			return;
 		ActionListener act = buttons.get(key).getActionListeners()[0];
 		if (act == null)
 			return;

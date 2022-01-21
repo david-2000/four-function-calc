@@ -100,13 +100,8 @@ public class TestUI extends CalcUI
 	 * {@inheritdoc}
 	 */
 	public void SetNumber(BigDecimal new_num){
-
 		number = new_num.add(new BigDecimal(0.0));
-
 		String num = format.format(new_num);
-
-		if(num.length() > n)
-			num = num.substring(0, n);
 		int m = num.length();
 
 		int i =0;

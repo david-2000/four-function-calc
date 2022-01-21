@@ -27,6 +27,25 @@ public class TestJUnit {
 		assertTrue(message, found);
 	}
 
+	private static void testSequenceApprox(String seq, String[] expect)
+	{
+		Calculator calc = CalcFactory.setUpCalc("TestUI", "SimpleCalc");
+		CalcUI ui = calc.ui;
+		for (int i = 0 ; i < seq.length() ; i++)
+			ui.PressKey(seq.charAt(i));
+
+		boolean found = false;
+		String actual = calc.ui.GetNumber();
+		String message = "Output ["+actual+"] not in expected set { ";
+		for(String x: expect){
+			message += x +",";
+			found |= actual.indexOf(x)==0;
+		}
+		message = message.substring(0,message.length()-1) +" } for sequence["+seq+"]" ;
+
+		assertTrue(message, found);
+	}
+
 	/*
 	 * -------------------------------------------------------------------------------------------------------------
 	 *  				Tests For Number Building
@@ -261,8 +280,8 @@ public class TestJUnit {
 	@Test
 	public void testAddAdd(){
 		TestJUnit.testSequence("2+1+", new String[] { "3"});
-		TestJUnit.testSequence("2+21+", new String[] { "21"});
-		TestJUnit.testSequence("2+21+3+", new String[] { "24"});
+		TestJUnit.testSequence("2+21+", new String[] { "23"});
+		TestJUnit.testSequence("2+21+3+", new String[] { "26"});
 	}
 
 	@Test
@@ -289,7 +308,7 @@ public class TestJUnit {
 	@Test
 	public void testDecSubEq(){
 		TestJUnit.testSequence(".2-1=", new String[] { "-0.8"});
-		TestJUnit.testSequence("2-.1=", new String[] { "0.9"});
+		TestJUnit.testSequence("2-.1=", new String[] { "1.9"});
 		TestJUnit.testSequence(".2-.1=", new String[] { "0.1"});
 		TestJUnit.testSequence("21-100.12=", new String[] { "-79.12"});
 		TestJUnit.testSequence("21.12-100=", new String[] { "-78.88"});
@@ -298,9 +317,9 @@ public class TestJUnit {
 
 	@Test
 	public void testSubSubEq(){
-		TestJUnit.testSequence("2-1-5=", new String[] { "-3"});
+		TestJUnit.testSequence("2-1-5=", new String[] { "-4"});
 		TestJUnit.testSequence("12-54-42=", new String[] { "-84"});
-		TestJUnit.testSequence("21-221-21=", new String[] { "263"});
+		TestJUnit.testSequence("21-221-21=", new String[] { "-221"});
 	}
 
 	@Test
@@ -362,7 +381,7 @@ public class TestJUnit {
 		TestJUnit.testSequence(".2*1=", new String[] { "0.2"});
 		TestJUnit.testSequence("2*.1=", new String[] { "0.2"});
 		TestJUnit.testSequence(".2*.1=", new String[] { "0.02"});
-		TestJUnit.testSequence("21*100.12=", new String[] { "252"});
+		TestJUnit.testSequence("21*100.12=", new String[] { "2102.52"});
 		TestJUnit.testSequence("21.12*100=", new String[] { "2112"});
 		TestJUnit.testSequence("21.12*100.12=", new String[] { "2114.5344"});
 	}
@@ -403,7 +422,7 @@ public class TestJUnit {
 	public void testMulMul(){
 		TestJUnit.testSequence("2*1*", new String[] { "2"});
 		TestJUnit.testSequence("2*21*", new String[] { "42"});
-		TestJUnit.testSequence("2*21*3*", new String[] { "*126"});
+		TestJUnit.testSequence("2*21*3*", new String[] { "126"});
 	}
 
 	@Test
@@ -431,7 +450,7 @@ public class TestJUnit {
 		TestJUnit.testSequence(".2/1=", new String[] { "0.2"});
 		TestJUnit.testSequence("2/.1=", new String[] { "20"});
 		TestJUnit.testSequence(".2/.1=", new String[] { "2"});
-		TestJUnit.testSequence("21/100.12=", new String[] { "0.2097483"});
+		TestJUnit.testSequenceApprox("21/100.12=", new String[] { "0.2097483"});
 		TestJUnit.testSequence("21.12/100=", new String[] { "0.2112"});
 		TestJUnit.testSequence("6.12/.12=", new String[] { "51"});
 		TestJUnit.testSequence("6.12/6.12=", new String[] { "1"});
@@ -441,16 +460,16 @@ public class TestJUnit {
 	public void testDivDivEq(){
 		TestJUnit.testSequence("2/1/5=", new String[] { "0.4"});
 		TestJUnit.testSequence("12/4/6=", new String[] { "0.5"});
-		TestJUnit.testSequence("210/21/1.15=", new String[] { "6.25"});
+		TestJUnit.testSequenceApprox("210/21/1.15=", new String[] { "8.69565217"});
 	}
 
 	@Test
 	public void testDecDivDivEq(){
-		TestJUnit.testSequence(".2/1/5=", new String[] { "0.04});
+		TestJUnit.testSequence(".2/1/5=", new String[] { "0.04"});
 		TestJUnit.testSequence("2/.1/16=", new String[] { "1.25"});
 		TestJUnit.testSequence("2/5/.5=", new String[] { "0.8"});
-		TestJUnit.testSequence("12/.23/.5=", new String[] { "104.347826"});
-		TestJUnit.testSequence("21/2.21/21=", new String[] { "0.45248869"});
+		TestJUnit.testSequenceApprox("12/.23/.5=", new String[] { "104.347826"});
+		TestJUnit.testSequenceApprox("21/2.21/21=", new String[] { "0.4524886"});
 	}
 
 
@@ -472,17 +491,17 @@ public class TestJUnit {
 	@Test
 	public void testDivDiv(){
 		TestJUnit.testSequence("2/1/", new String[] { "2"});
-		TestJUnit.testSequence("2/21/", new String[] { "0.0952381"});
-		TestJUnit.testSequence("2/21/3/", new String[] { "0.03174603"});
+		TestJUnit.testSequenceApprox("2/21/", new String[] { "0.095238"});
+		TestJUnit.testSequenceApprox("2/21/3/", new String[] { "0.0317460"});
 	}
 
 	@Test
 	public void testDecDivDiv(){
 		TestJUnit.testSequence(".2/1/5/", new String[] { "0.04"});
 		TestJUnit.testSequence("2/.1/5/", new String[] { "4"});
-		TestJUnit.testSequence("2/1/.35/", new String[] { "5.71428571"});
-		TestJUnit.testSequence("12/.54/42/", new String[] { "0.52910053"});
-		TestJUnit.testSequence("21/2.21/21/", new String[] { "0.45248869"});
+		TestJUnit.testSequenceApprox("2/1/.35/", new String[] { "5.71428571"});
+		TestJUnit.testSequenceApprox("12/.54/42/", new String[] { "0.5291005"});
+		TestJUnit.testSequenceApprox("21/2.21/21/", new String[] { "0.4524886"});
 	}
 
 
