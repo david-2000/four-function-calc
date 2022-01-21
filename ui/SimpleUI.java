@@ -80,6 +80,7 @@ public class SimpleUI extends CalcUI
 		window.setLayout(window_layout);
 		//window.setIconImage(some_image);
 
+		buttons = new HashMap<Character,JButton>();
 		SetUpPanels();
 
 
@@ -155,7 +156,6 @@ public class SimpleUI extends CalcUI
 	 */
 	private void SetUpNumbers()
 	{
-		buttons = new HashMap<Character,JButton>();
 
 		number_panel.setLayout(new GridLayout(4,3));
 		JButton bt;
