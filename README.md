@@ -7,5 +7,5 @@ This is a modular Four Function Calculator written in Java. The user interface a
 * Finally, a script `run_test.sh` is provided to manually compile and run tests.
 
 
-# Achknowledgements
+# Acknowledgments
 This calculator program is based off of a series of class projects (CSCI 245 - Programming II: Object Oriented Programming) from my time at Wheaton College. Although I wrote all the code in this repository, I acknowledge that the code is very inspired from Dr. Thomas VanDrunen's and Dr. Devin Pohly's starting code for the projects.
