@@ -1,6 +1,7 @@
 /**
  * A simple rendition of the calculator User Interface.
- *  @author <a href="mailto:david.pineda@my.wheaton.edu">David Pineda</a>
+ * @author <a href="mailto:david.pineda@my.wheaton.edu">David Pineda</a>
+ * The color palate used for this calculator came from <a href="https://colorhunt.co/palette/07222735858b4fbdbaaefeff">colorhunt.io</a>
  */
 package ui;
 
@@ -14,10 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JButton;
 import java.util.HashMap;
 import java.text.DecimalFormat;
+import java.math.BigDecimal;
 
 //Temp
 import javax.swing.BorderFactory;
-import java.math.BigDecimal;
 
 public class SimpleUI extends CalcUI
 {
@@ -137,6 +138,8 @@ public class SimpleUI extends CalcUI
 		GridBagConstraints c = new GridBagConstraints();
 		GridBagLayout g = new GridBagLayout();
 		display_panel.setLayout(g);
+		display_panel.setOpaque(true);
+		display_panel.setBackground(new Color(7,34,39));
 		int font_size = 24;
 
 		for ( int i = 0 ; i < n ; i++)
@@ -146,6 +149,9 @@ public class SimpleUI extends CalcUI
 			display_field[i] = new JLabel();
 			display_field[i].setFont(new Font("Jersey M54", Font.PLAIN, font_size));
 			display_field[i].setText("");
+			display_field[i].setOpaque(true);
+			display_field[i].setBackground(new Color(7,34,39));
+			display_field[i].setForeground(Color.WHITE);
 			display_panel.add(display_field[i], c);
 		}
 	}
@@ -160,7 +166,7 @@ public class SimpleUI extends CalcUI
 		number_panel.setLayout(new GridLayout(4,3));
 		JButton bt;
 		Font font = new Font("Calibri", Font.PLAIN, 30);
-
+		Color NColor = new Color(174, 254, 255);
 		for (int i = 1 ; i < 10 ; i++)
 		{
 			char l = (char)(48 + i);
@@ -168,7 +174,7 @@ public class SimpleUI extends CalcUI
 			bt.setText(((char) l) +"");
 			buttons.put(l, bt);
 			number_panel.add(bt);
-			bt.setBackground(Color.PINK);
+			bt.setBackground(NColor);
 			bt.setFont(font);
 		}
 		
@@ -176,17 +182,20 @@ public class SimpleUI extends CalcUI
 		bt.setText(CalcUI.PLUS_MINUS+"");
 		buttons.put(CalcUI.PLUS_MINUS, bt);
 		bt.setFont(font);
+		bt.setBackground(new Color(79, 189, 186));
 		number_panel.add(bt);
 
 		bt = new JButton();
 		bt.setText("0");
 		buttons.put('0', bt);
 		bt.setFont(font);
+		bt.setBackground(NColor);
 		number_panel.add(bt);
 
 		bt = new JButton();
 		bt.setText(".");
 		buttons.put('.', bt);
+		bt.setBackground(new Color(79, 189, 186));
 		bt.setFont(font);
 		number_panel.add(bt);
 	}
@@ -197,60 +206,64 @@ public class SimpleUI extends CalcUI
 	 */
 	private void SetUpFunctions()
 	{
-		GridBagLayout g = new GridBagLayout();
-		function_panel.setLayout(g);
-		GridBagConstraints c = new GridBagConstraints();
+		function_panel.setLayout(new GridLayout(4,1));
+		Font font = new Font("Calibri", Font.PLAIN, 30);
+		Color color = new Color(53, 133, 139);
 
+
+		JPanel p = new JPanel();
+		p.setLayout(new GridLayout(1,1));
 		JButton bt = new JButton();
 		bt.setText("C");
+		bt.setBackground(color);
+		bt.setFont(font);
 		buttons.put('C',bt);
-		c.gridx = 0;
-		c.gridy = 0;
-		c.gridwidth= 2;
-		c.fill = GridBagConstraints.BOTH;
-		function_panel.add(bt, c);
+		p.add(bt);
+		function_panel.add(p);
 		
 		bt = new JButton();
 		bt.setText("+");
+		bt.setBackground(color);
+		bt.setFont(font);
 		buttons.put('+',bt);
-		c.gridx = 0;
-		c.gridy = 1;
-		c.fill = GridBagConstraints.BOTH;
-		c.gridwidth= 1;
-		function_panel.add(bt, c);
+		p = new JPanel();
+		p.setLayout(new GridLayout(1,2));
+		p.add(bt);
 
 		bt = new JButton();
 		bt.setText("-");
+		bt.setBackground(color);
+		bt.setFont(font);
 		buttons.put('-',bt);
-		c.gridx = 1;
-		c.gridy = 1;
-		c.fill = GridBagConstraints.BOTH;
-		function_panel.add(bt, c);
+		p.add(bt);
+		function_panel.add(p);
 		
 		bt = new JButton();
 		bt.setText("*");
+		bt.setBackground(color);
+		bt.setFont(font);
 		buttons.put('*',bt);
-		c.gridx = 0;
-		c.gridy = 2;
-		c.fill = GridBagConstraints.BOTH;
-		function_panel.add(bt, c);
+		p = new JPanel();
+		p.setLayout(new GridLayout(1,2));
+		p.add(bt);
 
 		bt = new JButton();
 		bt.setText("/");
+		bt.setBackground(color);
+		bt.setFont(font);
 		buttons.put('/',bt);
-		c.gridx = 1;
-		c.gridy = 2;
-		c.fill = GridBagConstraints.BOTH;
-		function_panel.add(bt, c);
+		p.add(bt);
+		function_panel.add(p);
 
 		bt = new JButton();
 		bt.setText("=");
+		bt.setBackground(color);
+		bt.setFont(font);
 		buttons.put('=',bt);
-		c.gridx = 0;
-		c.gridy = 3;
-		c.gridwidth= 2;
-		c.fill = GridBagConstraints.BOTH;
-		function_panel.add(bt, c);
+		p = new JPanel();
+		p.setLayout(new GridLayout(1,1));
+		p.add(bt);
+		function_panel.add(p);
 	}
 
 
